@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModWork1", "ModWork1.csproj", "{32C3FC00-E6C7-4AB4-A5FC-BA78B9BC7459}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32C3FC00-E6C7-4AB4-A5FC-BA78B9BC7459}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{32C3FC00-E6C7-4AB4-A5FC-BA78B9BC7459}.Debug|Any CPU.Build.0 = Debug|x64
+		{32C3FC00-E6C7-4AB4-A5FC-BA78B9BC7459}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32C3FC00-E6C7-4AB4-A5FC-BA78B9BC7459}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5B10817C-BA87-4962-81A6-8A66C8AB0AA4}
+	EndGlobalSection
+EndGlobal

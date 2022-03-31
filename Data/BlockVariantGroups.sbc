@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <BlockVariantGroups>
+
+        <BlockVariantGroup>
+            <Id Type="MyObjectBuilder_BlockVariantGroup" Subtype="TetherGroup" />
+            <Icon>Textures\Psycho\Icons\PowerLinePillar.png</Icon>
+            <DisplayName>Tether Group</DisplayName>
+            <Description>Tether Group</Description>
+            <Blocks>
+                <Block Type="MyObjectBuilder_TerminalBlock" Subtype="PowerlinePillar" />
+                <Block Type="MyObjectBuilder_TerminalBlock" Subtype="ChargingStation" />
+                <Block Type="MyObjectBuilder_TerminalBlock" Subtype="PowerSockets" />
+                <Block Type="MyObjectBuilder_TerminalBlock" Subtype="TransformerPylon" />
+            </Blocks>
+        </BlockVariantGroup>
+        
+    </BlockVariantGroups>
+</Definitions>
