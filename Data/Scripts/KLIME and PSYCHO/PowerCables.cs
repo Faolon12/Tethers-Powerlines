@@ -69,7 +69,7 @@ namespace KlimeAndPsycho.PowerCables
         Lib Lib = new Lib();
 
         // SAVE DATA VARS
-        public static long ModId = 2202476548;
+        public static long ModId = 2648678420;
         public static ushort NetworkId = 56548;
         public static Guid SETTINGS_GUID = new Guid("73bb9141-0a4e-4c5a-93ae-f0d9ff23c043");
         //public const int SETTINGS_CHANGED_COUNTDOWN = (60 * 1) / 10; // div by 10 because it runs in update10
