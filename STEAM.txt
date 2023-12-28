@@ -16,8 +16,4 @@ Add more connection blocks variety.
 Add special cable socket blocks rather then being able to connect cables on any terminal block.
 LOD models for the various blocks.
 Terminal list containing currently connected grids and ability to sever/disconnect them.
-
-Huge thanks to KLIME that the code is based of.
-This will be a substitute until the real power cables mod by Churrosaur gets finished.
-
 DO NOTE THAT THIS WILL SAVE BOTH GRIDS WHEN MAKING BLUEPRINTS
