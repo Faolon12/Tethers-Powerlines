@@ -24,19 +24,29 @@ namespace FaolonTether.PowerCables
 
         public override void LoadData()
         {
+            Log.Info("PowerCableMod Loading");
+
             Instance = this;
 
             Networking.Register();
+            Log.Info("[PowerCableMod] Networking registered.");
 
             CachedPacketSettings = new PacketBlockSettings();
+
+            Log.Info("PowerCableMod Loaded");
         }
 
         protected override void UnloadData()
         {
+            Log.Info("PowerCableMod Unloading");
+
             Instance = null;
 
             Networking?.Unregister();
+            Log.Info("[PowerCableMod] Networking Unregistered.");
             Networking = null;
+
+            Log.Info("PowerCableMod Unloaded");
         }
     }
 }

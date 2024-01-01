@@ -239,7 +239,10 @@ namespace FaolonTether.PowerCables
         {
             block = Entity as IMyTerminalBlock;
             if (block == null)
+            {
+                Log.Info("PowerCable: Init called but block is null");
                 return;
+            }
 
             // Get server status.
             // Because try manage most things on server and only do visuals on clients.
@@ -247,6 +250,8 @@ namespace FaolonTether.PowerCables
             IsDedicated = MyAPIGateway.Utilities.IsDedicated;
 
             NeedsUpdate |= MyEntityUpdateEnum.BEFORE_NEXT_FRAME | MyEntityUpdateEnum.EACH_FRAME;
+            Log.Info($"PowerCable: Init completed for block {block.EntityId}");
+
         }
 
         // ======
@@ -315,7 +320,7 @@ namespace FaolonTether.PowerCables
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error("PowerCable: Exception in [MethodName] for block " + block.EntityId + ": " + e.ToString());
             }
         }
 
@@ -406,7 +411,7 @@ namespace FaolonTether.PowerCables
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error("PowerCable: Exception in [MethodName] for block " + block.EntityId + ": " + e.ToString());
             }
 
             // Setup the highlight visuals.
@@ -524,7 +529,7 @@ namespace FaolonTether.PowerCables
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error("PowerCable: Exception in [MethodName] for block " + block.EntityId + ": " + e.ToString());
             }
         }
 
@@ -971,7 +976,8 @@ namespace FaolonTether.PowerCables
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error("PowerCable: Exception in [MethodName] for block " + block.EntityId + ": " + e.ToString());
+
             }
         }
 
@@ -987,6 +993,8 @@ namespace FaolonTether.PowerCables
         // @Digi storage and serialization
         bool LoadSettings()
         {
+            Log.Info("PowerCable: LoadSettings called for block " + block.EntityId);
+
             if (block.Storage == null)
                 return false;
 
@@ -1010,7 +1018,8 @@ namespace FaolonTether.PowerCables
             }
             catch (Exception e)
             {
-                Log.Error($"Error loading settings!\n{e}");
+                Log.Error("PowerCable: Exception in [MethodName] for block " + block.EntityId + ": " + e.ToString());
+
             }
 
             return false;
@@ -1019,6 +1028,8 @@ namespace FaolonTether.PowerCables
         // @Digi storage and serialization
         void SaveSettings()
         {
+            Log.Info("PowerCable: SaveSettings called for block " + block.EntityId);
+
             if (block == null)
                 return; // called too soon or after it was already closed, ignore
 
@@ -1065,7 +1076,8 @@ namespace FaolonTether.PowerCables
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error("PowerCable: Exception in [MethodName] for block " + block.EntityId + ": " + e.ToString());
+
             }
 
             return base.IsSerialized();

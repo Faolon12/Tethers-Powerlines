@@ -15,6 +15,8 @@ namespace FaolonTether.PowerCables.Sync
         public Networking(ushort packetId)
         {
             PacketId = packetId;
+            Log.Info($"[Networking] Initialized with PacketId={PacketId}"); // Log the initialization of Networking
+
         }
 
         /// <summary>
@@ -23,6 +25,8 @@ namespace FaolonTether.PowerCables.Sync
         public void Register()
         {
             MyAPIGateway.Multiplayer.RegisterSecureMessageHandler(PacketId, ReceivedPacket);
+            Log.Info("[Networking] Packet handler registered."); // Log when packet handler is registered
+
         }
 
         /// <summary>
@@ -31,23 +35,36 @@ namespace FaolonTether.PowerCables.Sync
         public void Unregister()
         {
             MyAPIGateway.Multiplayer.UnregisterSecureMessageHandler(PacketId, ReceivedPacket);
+            Log.Info("[Networking] Packet handler unregistered."); // Log when packet handler is unregistered
+
         }
 
         private void ReceivedPacket(ushort handlerId, byte[] rawData, ulong senderId, bool fromServer) // executed when a packet is received on this machine
         {
+            Log.Info($"[Networking] ReceivedPacket called. HandlerId={handlerId}, SenderId={senderId}, FromServer={fromServer}, DataSize={rawData.Length}");
+
             try
             {
                 var packet = MyAPIGateway.Utilities.SerializeFromBinary<PacketBase>(rawData);
 
+                // Log after successful deserialization
+                // Log the receipt of raw packet data
+                Log.Info($"[Networking] Packet deserialized: {packet.GetType()}, SenderId={packet.SenderId}");
+
                 bool relay = false;
                 packet.Received(ref relay);
 
+                Log.Info($"[Networking] Packet 'Received' method processed. PacketType={packet.GetType()}, Relay={relay}");
+
                 if (relay)
+                {
                     RelayToClients(packet, rawData);
+                    Log.Info($"[Networking] RelayToClients called. PacketType={packet.GetType()}"); // Log when the packet is relayed to clients
+                }
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error($"[Networking] Exception in ReceivedPacket: {e.Message}");
             }
         }
 
@@ -61,6 +78,9 @@ namespace FaolonTether.PowerCables.Sync
             var bytes = MyAPIGateway.Utilities.SerializeToBinary(packet);
 
             MyAPIGateway.Multiplayer.SendMessageToServer(PacketId, bytes);
+
+            Log.Info($"[Networking] Packet sent to server. PacketType={packet.GetType()}"); // Log when a packet is sent to the server
+
         }
 
         /// <summary>
@@ -77,6 +97,8 @@ namespace FaolonTether.PowerCables.Sync
             var bytes = MyAPIGateway.Utilities.SerializeToBinary(packet);
 
             MyAPIGateway.Multiplayer.SendMessageTo(PacketId, bytes, steamId);
+            Log.Info($"[Networking] Packet sent to player. PacketType={packet.GetType()}, SteamId={steamId}"); // Log when a packet is sent to a specific player
+
         }
 
         private List<IMyPlayer> tempPlayers;
@@ -96,6 +118,8 @@ namespace FaolonTether.PowerCables.Sync
                 tempPlayers.Clear();
 
             MyAPIGateway.Players.GetPlayers(tempPlayers);
+            Log.Info($"[Networking] Relaying packet to clients. PacketType={packet.GetType()}, ClientsCount={tempPlayers.Count}"); // Log before relaying to clients
+
 
             foreach (var p in tempPlayers)
             {
