@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VRage.Game;
 using VRage.Game.Components;
-using VRage.Game.ModAPI.Ingame;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRage.Network;
 using VRage.Utils;
@@ -71,6 +71,17 @@ namespace FaolonTether
 
             if (Tools.IsPlayerInMenus()) return;
 
+            if (MyAPIGateway.Session?.Player?.Character == null)
+                return;
+
+            IMyEntity tool = MyAPIGateway.Session.Player.Character.EquippedTool;
+
+            if (tool != null)
+            {
+                MyLog.Default.Info("[Tether] Player is holding a tool, skipping interaction.");
+                return;
+            }
+
             bool leftClick = MyAPIGateway.Input.IsNewLeftMouseReleased();
             bool rightClick = MyAPIGateway.Input.IsNewRightMouseReleased();
 
@@ -80,7 +91,7 @@ namespace FaolonTether
                 Cancel();
             }
 
-            MatrixD playerMatrix = MyAPIGateway.Session.Player.Character.GetHeadMatrix(true);
+             MatrixD playerMatrix = MyAPIGateway.Session.Player.Character.GetHeadMatrix(true);
             Tools.RaycastData hit = Tools.RayCastGetHitBlock(playerMatrix);
 
             // stop if there is nothing to interact with
