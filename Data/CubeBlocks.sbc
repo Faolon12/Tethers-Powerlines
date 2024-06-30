@@ -7,7 +7,7 @@
         <SubtypeId>ChargingStation</SubtypeId>
       </Id>
       <DisplayName>Charging Station</DisplayName>
-      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Description>Left mouse button while no blocks are equipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
       <Icon>Textures\Psycho\Icons\ChargingStation.png</Icon>
       <CubeSize>Large</CubeSize>
       <BlockTopology>TriangleMesh</BlockTopology>
@@ -227,6 +227,109 @@
         <Model BuildPercentUpperBound="1.00" File="Models\PSYCHO\Small\ConveyorHoseAttachment.mwm" />
       </BuildProgressModels>
       <BlockPairName>ConveyorHoseAttachment</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>6</BuildTimeSeconds>
+      <DestroyEffectOffset>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>1.1</Z>
+      </DestroyEffectOffset>
+      <PCU>5</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+
+
+	  
+    <Definition>
+      <Id>
+        <TypeId>TerminalBlock</TypeId>
+        <SubtypeId>LFemaleCStation</SubtypeId>
+      </Id>
+      <DisplayName>F Charging Station</DisplayName>
+      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Icon>Textures\Psycho\Icons\PowerSockets.png</Icon>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <!-- ControlPanel -->
+      <!-- InteriorPillar -->
+      <Model>Models\PSYCHO\Large\FemaleChargerFuel\LFemaleCStation.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="Computer" Count="1" />
+        <Component Subtype="Display" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Construction" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+     </MountPoints>
+      <IsStandAlone>true</IsStandAlone>
+      <HasPhysics>true</HasPhysics>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Psycho\Large\FemaleChargerFuel\LFemaleCStation_BS1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Psycho\Large\FemaleChargerFuel\LFemaleCStation_BS2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Psycho\Large\FemaleChargerFuel\LFemaleCStation_BS3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>FemaleCStation</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>6</BuildTimeSeconds>
+      <DestroyEffectOffset>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>1.1</Z>
+      </DestroyEffectOffset>
+      <PCU>5</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+
+
+	  
+    <Definition>
+      <Id>
+        <TypeId>TerminalBlock</TypeId>
+        <SubtypeId>SMaleCStation</SubtypeId>
+      </Id>
+      <DisplayName>M Charging Station</DisplayName>
+      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Icon>Textures\Psycho\Icons\PowerSockets.png</Icon>
+      <CubeSize>Small</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <!-- ControlPanel -->
+      <!-- InteriorPillar -->
+      <Model>Models\PSYCHO\Small\SMaleCStation\SMaleCStation.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="Computer" Count="1" />
+        <Component Subtype="Display" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Construction" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0.1" EndX="0.9" StartY="0.1" EndY="0.9" />
+        <MountPoint Side="Left" StartX="0" StartY="0.9" EndX="1" EndY="1" />
+	    <MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="1" />
+	    <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+      </MountPoints>
+      <IsStandAlone>true</IsStandAlone>
+      <HasPhysics>true</HasPhysics>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Psycho\Small\SMaleCStation\SMaleCStation_BS1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Psycho\Small\SMaleCStation\SMaleCStation_BS2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Psycho\Small\SMaleCStation\SMaleCStation_BS3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>MaleCStation</BlockPairName>
       <MirroringZ>Y</MirroringZ>
       <MirroringY>Z</MirroringY>
       <EdgeType>Light</EdgeType>

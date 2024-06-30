@@ -12,6 +12,9 @@
                 <Block Type="MyObjectBuilder_TerminalBlock" Subtype="ChargingStation" />
                 <Block Type="MyObjectBuilder_TerminalBlock" Subtype="PowerSockets" />
                 <Block Type="MyObjectBuilder_TerminalBlock" Subtype="TransformerPylon" />
+                <Block Type="MyObjectBuilder_TerminalBlock" Subtype="LFemaleCStation" />
+                <Block Type="MyObjectBuilder_TerminalBlock" Subtype="SMaleCStation" />
+				<Block Type="MyObjectBuilder_TerminalBlock" Subtype="ConveyorHoseAttachment" />
             </Blocks>
         </BlockVariantGroup>
         
