@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CubeBlocks>
+    <Definition>
+      <Id>
+        <TypeId>TerminalBlock</TypeId>
+        <SubtypeId>ChargingStation</SubtypeId>
+      </Id>
+      <DisplayName>Charging Station</DisplayName>
+      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Icon>Textures\Psycho\Icons\ChargingStation.png</Icon>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <!-- ControlPanel -->
+      <!-- InteriorPillar -->
+      <Model>Models\PSYCHO\Large\ChargingStation.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="Computer" Count="1" />
+        <Component Subtype="Display" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Construction" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0.1" EndX="0.9" StartY="0.1" EndY="0.9" />
+      </MountPoints>
+      <IsStandAlone>true</IsStandAlone>
+      <HasPhysics>true</HasPhysics>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ProgrammingBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ProgrammingBlockConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ProgrammingBlockConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>PowerPillar</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>6</BuildTimeSeconds>
+      <DestroyEffectOffset>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>1.1</Z>
+      </DestroyEffectOffset>
+      <PCU>5</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+
+
+
+    <Definition>
+      <Id>
+        <TypeId>TerminalBlock</TypeId>
+        <SubtypeId>PowerlinePillar</SubtypeId>
+      </Id>
+      <DisplayName>Power Line Pillar</DisplayName>
+      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Icon>Textures\Psycho\Icons\PowerLinePillar.png</Icon>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="5" z="2" />
+      <ModelOffset x="0" y="0" z="0" />
+      <!-- ControlPanel -->
+      <!-- InteriorPillar -->
+      <Model>Models\PSYCHO\Large\PowerlinePillar.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="Computer" Count="1" />
+        <Component Subtype="Display" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Construction" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0.1" EndX="0.9" StartY="0.1" EndY="1.9" Default="true" />
+        <MountPoint Side="Top" StartX="0.4" EndX="0.6" StartY="1" EndY="1.5" />
+      </MountPoints>
+      <IsStandAlone>true</IsStandAlone>
+      <HasPhysics>true</HasPhysics>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ProgrammingBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ProgrammingBlockConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ProgrammingBlockConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>PowerlinePillar</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>6</BuildTimeSeconds>
+      <DestroyEffectOffset>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>1.1</Z>
+      </DestroyEffectOffset>
+      <PCU>5</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+
+
+
+    <Definition>
+      <Id>
+        <TypeId>TerminalBlock</TypeId>
+        <SubtypeId>TransformerPylon</SubtypeId>
+      </Id>
+      <DisplayName>Transformer Pylon</DisplayName>
+      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Icon>Textures\Psycho\Icons\TransformerPylon.png</Icon>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="5" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <!-- ControlPanel -->
+      <!-- InteriorPillar -->
+      <Model>Models\PSYCHO\Large\PowerTransformerPillar.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="Computer" Count="1" />
+        <Component Subtype="Display" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Construction" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0.1" EndX="0.9" StartY="0.1" EndY="0.9" />
+      </MountPoints>
+      <IsStandAlone>true</IsStandAlone>
+      <HasPhysics>true</HasPhysics>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ProgrammingBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ProgrammingBlockConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ProgrammingBlockConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>TransformerPylon</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>6</BuildTimeSeconds>
+      <DestroyEffectOffset>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>1.1</Z>
+      </DestroyEffectOffset>
+      <PCU>5</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+
+
+
+    <Definition>
+      <Id>
+        <TypeId>TerminalBlock</TypeId>
+        <SubtypeId>PowerSockets</SubtypeId>
+      </Id>
+      <DisplayName>Power Sockets</DisplayName>
+      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Icon>Textures\Psycho\Icons\PowerSockets.png</Icon>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <!-- ControlPanel -->
+      <!-- InteriorPillar -->
+      <Model>Models\PSYCHO\Large\PowerSockets.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="Computer" Count="1" />
+        <Component Subtype="Display" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Construction" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0.1" EndX="0.9" StartY="0.1" EndY="0.9" />
+      </MountPoints>
+      <IsStandAlone>true</IsStandAlone>
+      <HasPhysics>true</HasPhysics>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ProgrammingBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ProgrammingBlockConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ProgrammingBlockConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>PowerSocket</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>6</BuildTimeSeconds>
+      <DestroyEffectOffset>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>1.1</Z>
+      </DestroyEffectOffset>
+      <PCU>5</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+
+
+
+    <Definition>
+      <Id>
+        <TypeId>TerminalBlock</TypeId>
+        <SubtypeId>ConveyorHoseAttachment</SubtypeId>
+      </Id>
+      <DisplayName>Conveyor Hose Attachment</DisplayName>
+      <Description>Left mouse button while no blocks are eqruipped will start placement mode. Right mouse button cancels cable placement mode or disconnects already established connection.</Description>
+      <Icon>Textures\Psycho\Icons\ChargingStation.png</Icon>
+      <CubeSize>Small</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <!-- ControlPanel -->
+      <!-- InteriorPillar -->
+      <Model>Models\PSYCHO\Small\ConveyorHoseAttachment.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="Computer" Count="1" />
+        <Component Subtype="Display" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Construction" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0.1" EndX="0.9" StartY="0.1" EndY="0.9" />
+      </MountPoints>
+      <IsStandAlone>true</IsStandAlone>
+      <HasPhysics>true</HasPhysics>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\PSYCHO\Small\ConveyorHoseAttachment.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\PSYCHO\Small\ConveyorHoseAttachment.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\PSYCHO\Small\ConveyorHoseAttachment.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>ConveyorHoseAttachment</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>6</BuildTimeSeconds>
+      <DestroyEffectOffset>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>1.1</Z>
+      </DestroyEffectOffset>
+      <PCU>5</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+  </CubeBlocks>
+</Definitions>

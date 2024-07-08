@@ -1,0 +1,23 @@
+Power Cables
+TESTING ONLY
+It is not done, cable connections don't save yet. This release is just for testing.
+
+Usage:
+Place down a "charging staton" and right click on it and then move to any other non-connected grid and right click any terminal block to connect.
+NOTE
+Static grids can have cables reach up to 100 meters.
+Dynamic grids (ships/wheeled vehicles etc) can only reach up to 20 meters.
+To disconnect a grid, either move it beyond 20 meters or repeat the same steps as you want to connect, only it will disconnect any connected grids.
+When a grid is connected, it doesn't matter which terminal block you right click on, it will disconnect by default.
+
+TODO
+Add persistent connections.
+Add more connection blocks variety.
+Add special cable socket blocks rather then being able to connect cables on any terminal block.
+LOD models for the various blocks.
+Terminal list containing currently connected grids and ability to sever/disconnect them.
+
+Huge thanks to KLIME that the code is based of.
+This will be a substitute until the real power cables mod by Churrosaur gets finished.
+
+DO NOTE THAT THIS WILL SAVE BOTH GRIDS WHEN MAKING BLUEPRINTS
