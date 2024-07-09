@@ -1,51 +1,23 @@
 ﻿using System;
-using System.Globalization;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Definitions;
 using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.Game.Entities;
-using Sandbox.Game.Gui;
-using Sandbox.Game;
-using VRage.Common.Utils;
-using VRageMath;
-using VRage;
-using VRage.Game;
-using VRage.ObjectBuilders;
-using VRage.Game.Components;
-using Sandbox.ModAPI.Interfaces.Terminal;
-using VRage.ModAPI;
-using VRage.Utils;
-using VRage.Library.Utils;
 using VRage.Game.ModAPI;
+using VRageMath;
 using Sandbox.Game.EntityComponents;
-using VRage.Input;
-using Sandbox.Game.GameSystems;
-using VRage.Game.VisualScripting;
-using Sandbox.Game.World;
-using Sandbox.Game.Components;
-using VRageRender.Animations;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
-using BlendTypeEnum = VRageRender.MyBillboard.BlendTypeEnum;
-using Sandbox.ModAPI.Weapons;
-using System.ComponentModel.Design;
+using VRage.Game.Components;
+using VRage.ModAPI;
 
 // Thanks to all the guys who put a lot of work into these.
 // I know some could be called directly instead but wrote these intermediate methods to make it more clear what is what and what it returns.
 
-namespace KlimeAndPsycho
+namespace FaolonTether
 {
-    class Lib
+    public class Tools
     {
-        public double GetClosestPlayer(List<IMyPlayer> PlayerList, Vector3D location)
+        public static double GetClosestPlayer(List<IMyPlayer> PlayerList, Vector3D location)
         {
             PlayerList.Clear();
             MyAPIGateway.Players.GetPlayers(PlayerList);
@@ -71,7 +43,7 @@ namespace KlimeAndPsycho
             return Math.Sqrt(closestDistance);
         }
 
-        public Vector3D GetDummyRelativeLocation(IMyTerminalBlock block)
+        public static Vector3D GetDummyRelativeLocation(IMyTerminalBlock block)
         {
             Vector3D DummyAttachPoint = Vector3D.Zero;
 
@@ -85,13 +57,13 @@ namespace KlimeAndPsycho
                 {
                     Vector3D DummyLoc = ModelDummy["cable_attach_point_1"].Matrix.Translation;
                     Vector3D worldPosition = Vector3D.Transform(DummyLoc, block.WorldMatrix);
-                    DummyAttachPoint = DummyLoc;
+                    DummyAttachPoint = worldPosition;
                 }
                 else if (ModelDummy.ContainsKey("cable_attach_point"))
                 {
                     Vector3D DummyLoc = ModelDummy["cable_attach_point"].Matrix.Translation;
                     Vector3D worldPosition = Vector3D.Transform(DummyLoc, block.WorldMatrix);
-                    DummyAttachPoint = DummyLoc;
+                    DummyAttachPoint = worldPosition;
                 }
             }
             else
@@ -100,14 +72,14 @@ namespace KlimeAndPsycho
                 {
                     Vector3D DummyLoc = ModelDummy["cable_attach_point"].Matrix.Translation;
                     Vector3D worldPosition = Vector3D.Transform(DummyLoc, block.WorldMatrix);
-                    DummyAttachPoint = DummyLoc;
+                    DummyAttachPoint = worldPosition;
                 }
             }
 
             return DummyAttachPoint;
         }
 
-        public Vector3D GetDummyRelativeLocation(IMyTerminalBlock endBlock, raycast_data hitblock)
+        public static Vector3D GetDummyRelativeLocation(IMyTerminalBlock endBlock, RaycastData hitblock)
         {
             Vector3D DummyAttachEndPoint = Vector3D.Zero;
 
@@ -126,7 +98,7 @@ namespace KlimeAndPsycho
             }
             else
             {
-                Vector3D worldDirection = hitblock.hit_location - endBlock.WorldMatrix.Translation;
+                Vector3D worldDirection = hitblock.Position - endBlock.WorldMatrix.Translation;
                 Vector3D bodyPosition = Vector3D.TransformNormal(worldDirection, MatrixD.Transpose(endBlock.WorldMatrix));
 
                 DummyAttachEndPoint = bodyPosition;
@@ -141,12 +113,12 @@ namespace KlimeAndPsycho
 
 
 
-        public Vector3D LocalToWorldPosition(Vector3D localPosition, MatrixD worldPosition)
+        public static Vector3D LocalToWorldPosition(Vector3D localPosition, MatrixD worldPosition)
         {
             return Vector3D.Transform(localPosition, worldPosition);
         }
 
-        public Vector3D WorldToLocalPosition(Vector3D worldPosition, MatrixD referenceWorldPosition)
+        public static Vector3D WorldToLocalPosition(Vector3D worldPosition, MatrixD referenceWorldPosition)
         {
             Vector3D worldDirection = worldPosition - referenceWorldPosition.Translation;
             return Vector3D.TransformNormal(worldDirection, MatrixD.Transpose(referenceWorldPosition));
@@ -157,28 +129,30 @@ namespace KlimeAndPsycho
         /// </summary>
         /// <param name="block"></param>
         /// <returns></returns>
-        public bool IsBlockValid(IMyTerminalBlock block)
+        public static bool IsBlockValid(IMyTerminalBlock block)
         {
-            //if (!block.IsFunctional || block.CubeGrid.Physics == null || !block.IsWorking || block.MarkedForClose || block.Closed)
-            if (block.CubeGrid.Physics == null || block.MarkedForClose || block.Closed)
+            if (block == null || block.CubeGrid.Physics == null || block.MarkedForClose || block.Closed)
                 return false;
             return true;
         }
 
+        public static bool IsPlayerInMenus() {
+            return MyAPIGateway.Gui.IsCursorVisible || MyAPIGateway.Gui.ChatEntryVisible;
+        }
 
 
         // =====================================================================================================================================================================================================================
 
 
 
-        public class raycast_data
+        public class RaycastData
         {
-            public IMySlimBlock hit_block = null;
-            public Vector3D hit_location = Vector3D.Zero;
-            public raycast_data(IMySlimBlock hit_block, Vector3D hit_location)
+            public IMySlimBlock Block = null;
+            public Vector3D Position = Vector3D.Zero;
+            public RaycastData(IMySlimBlock block, Vector3D position)
             {
-                this.hit_block = hit_block;
-                this.hit_location = hit_location;
+                this.Block = block;
+                this.Position = position;
             }
         }
 
@@ -186,32 +160,37 @@ namespace KlimeAndPsycho
         /// <summary>
         /// Shoots a raycast 10m forward and returns a custom data type 'raycast_data' containing IMySlimBlock block and Vector3D raycast block relative hit location.
         /// </summary>
-        /// <param name="raycast_origin_matrix"></param>
+        /// <param name="origin"></param>
         /// <returns></returns>
-        public raycast_data RayCastGetHitBlock(MatrixD raycast_origin_matrix)
+        public static RaycastData RayCastGetHitBlock(MatrixD origin)
         {
             Vector3D hitLocation = Vector3D.Zero;
-            IMySlimBlock return_block = null;
-            IHitInfo ray_hit = null;
-            MyAPIGateway.Physics.CastRay(raycast_origin_matrix.Translation + raycast_origin_matrix.Forward * 0.1, raycast_origin_matrix.Translation + raycast_origin_matrix.Forward * 10, out ray_hit);
-            if (ray_hit != null && ray_hit.HitEntity is IMyCubeGrid)
+            IMySlimBlock returnBlock = null;
+            IHitInfo hit = null;
+            MyAPIGateway.Physics.CastRay(origin.Translation + origin.Forward * 0.1, origin.Translation + origin.Forward * 10, out hit);
+            if (hit != null && hit.HitEntity is IMyCubeGrid)
             {
-                var grid = ray_hit.HitEntity as IMyCubeGrid;
+                IMyCubeGrid grid = hit.HitEntity as IMyCubeGrid;
                 if (grid != null && !grid.MarkedForClose && grid.Physics != null)
                 {
-                    hitLocation = ray_hit.Position;
-                    var pos = grid.WorldToGridInteger(ray_hit.Position + raycast_origin_matrix.Forward * 0.1);
-                    return_block = grid.GetCubeBlock(pos);
+                    hitLocation = hit.Position;
+                    Vector3I pos = grid.WorldToGridInteger(hit.Position + origin.Forward * 0.1);
+                    returnBlock = grid.GetCubeBlock(pos);
                 }
             }
 
-            return new raycast_data(return_block, hitLocation);
+            return new RaycastData(returnBlock, hitLocation);
         }
 
         // If we ever want to implement a more complex notification system, do it here.
-        public void ShowNotification(string text)
+        public static void ShowNotification(string text)
         {
             MyAPIGateway.Utilities.ShowNotification(text, 1);
+        }
+
+        public static MyModStorageComponentBase GetStorage(IMyEntity entity)
+        {
+            return entity.Storage ?? (entity.Storage = new MyModStorageComponent());
         }
     }
 }

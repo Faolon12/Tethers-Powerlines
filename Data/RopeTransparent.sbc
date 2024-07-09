@@ -6,12 +6,12 @@
 				<TypeId>TransparentMaterialDefinition</TypeId>
 				<SubtypeId>cable</SubtypeId>
 			</Id>
-			<AlphaMistingEnable>false</AlphaMistingEnable>
-			<AlphaSaturation>1</AlphaSaturation>
+			<AlphaMistingEnable>true</AlphaMistingEnable>
+			<AlphaSaturation>0.7</AlphaSaturation>
 			<CanBeAffectedByOtherLights>false</CanBeAffectedByOtherLights>
 			<IgnoreDepth>false</IgnoreDepth>
 			<SoftParticleDistanceScale>0.1</SoftParticleDistanceScale>
-			<Texture>Textures\rope.dds</Texture>
+			<Texture>Textures\cable.dds</Texture>
 		</TransparentMaterial>
 		<TransparentMaterial>
 			<Id>
@@ -19,7 +19,7 @@
 				<SubtypeId>cableRed</SubtypeId>
 			</Id>
 			<AlphaMistingEnable>false</AlphaMistingEnable>
-			<AlphaSaturation>1</AlphaSaturation>
+			<AlphaSaturation>0.5</AlphaSaturation>
 			<CanBeAffectedByOtherLights>false</CanBeAffectedByOtherLights>
 			<IgnoreDepth>false</IgnoreDepth>
 			<SoftParticleDistanceScale>0.1</SoftParticleDistanceScale>
@@ -31,7 +31,7 @@
 				<SubtypeId>cableGreen</SubtypeId>
 			</Id>
 			<AlphaMistingEnable>false</AlphaMistingEnable>
-			<AlphaSaturation>1</AlphaSaturation>
+			<AlphaSaturation>0.5</AlphaSaturation>
 			<CanBeAffectedByOtherLights>false</CanBeAffectedByOtherLights>
 			<IgnoreDepth>false</IgnoreDepth>
 			<SoftParticleDistanceScale>0.1</SoftParticleDistanceScale>
