@@ -261,7 +261,7 @@ namespace FaolonTether
 
             lock (Links)
             {
-                for (int i = 0; i < Links.Count; i++)
+                for (int i = Links.Count - 1; i >= 0; i--) // Loop in reverse to safely remove items
                 {
                     PowerlineLink l = Links[i];
 
@@ -344,26 +344,53 @@ namespace FaolonTether
 
         public static void ConnectGrids(long id, MyCubeGrid a, MyCubeGrid b)
         {
+            MyLog.Default.Info($"[Tether] ConnectGrids HAS BEEN CALLED");
+            int linkCount = LinkCount(a, b);
+            if (linkCount > 0)
+            {
+                MyLog.Default.Info($"[Tether] ConnectGrids: there are {linkCount} connections between {a.EntityId} and {b.EntityId}. skipping link.");
+                return;
+            }
+
             if (!a.IsInSameLogicalGroupAs(b))
             {
-                MyCubeGrid.CreateGridGroupLink(GridLinkTypeEnum.Logical, id, a, b);
-                MyCubeGrid.CreateGridGroupLink(GridLinkTypeEnum.Electrical, id, a, b);
+                MyCubeGrid.CreateGridGroupLink(LinkType, a.EntityId, a, b);
+                MyCubeGrid.CreateGridGroupLink(GridLinkTypeEnum.Electrical, a.EntityId, a, b);
+
+                MyCubeGrid.CreateGridGroupLink(LinkType, b.EntityId, a, b);
+                MyCubeGrid.CreateGridGroupLink(GridLinkTypeEnum.Electrical, b.EntityId, a, b);
                 MyLog.Default.Info($"[Tether] ConnectGrids: grids {a.EntityId} and {b.EntityId} are now connected");
             }
+            else
+                MyLog.Default.Info($"[Tether] Grid connection between  {a.EntityId} and {b.EntityId} Exist already");
         }
 
         public static void DisconnectGrids(long id, MyCubeGrid a, MyCubeGrid b)
         {
+
             if (a.IsInSameLogicalGroupAs(b))
             {
-                MyCubeGrid.BreakGridGroupLink(GridLinkTypeEnum.Logical, id, a, b);
-                MyCubeGrid.BreakGridGroupLink(GridLinkTypeEnum.Electrical, id, a, b);
-                MyLog.Default.Info($"[Tether] DisconnectGrids: grids {a.EntityId} and {b.EntityId} are disconnected");
+                int linkCount = LinkCount(a, b);
+                if (linkCount == 1)
+                {
+                    MyCubeGrid.BreakGridGroupLink(LinkType, a.EntityId, a, b);
+                    MyCubeGrid.BreakGridGroupLink(GridLinkTypeEnum.Electrical, a.EntityId, a, b);
+
+                    MyCubeGrid.BreakGridGroupLink(LinkType, b.EntityId, a, b);
+                    MyCubeGrid.BreakGridGroupLink(GridLinkTypeEnum.Electrical, b.EntityId, a, b);
+
+                    MyLog.Default.Info($"[Tether] DisconnectGrids: grids {a.EntityId} and {b.EntityId} are disconnected");
+                }
+                else
+                {
+                    MyLog.Default.Info($"[Tether] DisconnectGrids: grids {a.EntityId} and {b.EntityId} have {linkCount} links. it will not be disconnect");
+                }
             }
             else
             {
                 MyLog.Default.Info($"[Tether] DisconnectGrids: grids {a.EntityId} and {b.EntityId} are not in the same group");
             }
+
         }
 
         public void ConnectionPoles(PowerlinePole targetPole, IMyPlayer player)

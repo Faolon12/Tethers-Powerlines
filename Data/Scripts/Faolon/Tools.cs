@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Sandbox.ModAPI;
 using VRage.Game.ModAPI;
 using VRageMath;
@@ -26,12 +23,11 @@ namespace FaolonTether
 
             foreach (IMyPlayer player in PlayerList)
             {
-
                 if (player?.Character == null)
                     continue;
                 double distance = Vector3D.DistanceSquared(player.Character.WorldMatrix.Translation, location);
 
-                if (distance < closestDistance * closestDistance)
+                if (distance < closestDistance)
                 {
                     closestDistance = distance;
                 }
@@ -52,7 +48,7 @@ namespace FaolonTether
 
             if (DummyCount > 1)
             {
-                // TODO Add logic for multiple dummies per block. For now, staticaly only takes the first one.
+                // TODO Add logic for multiple dummies per block. For now, statically only takes the first one.
                 if (ModelDummy.ContainsKey("cable_attach_point_1"))
                 {
                     Vector3D DummyLoc = ModelDummy["cable_attach_point_1"].Matrix.Translation;
@@ -107,11 +103,53 @@ namespace FaolonTether
             return DummyAttachEndPoint;
         }
 
-
-
         // =====================================================================================================================================================================================================================
 
+        public static List<Vector3D> GetDummyRelativeLocations(IMyTerminalBlock block)
+        {
+            List<Vector3D> dummyLocations = new List<Vector3D>();
 
+            // Check for existing dummies
+            IDictionary<string, IMyModelDummy> ModelDummy = new Dictionary<string, IMyModelDummy>();
+            block.Model.GetDummies(ModelDummy);
+
+            if (ModelDummy.ContainsKey("cable_attach_point"))
+            {
+                Vector3D DummyLoc = ModelDummy["cable_attach_point"].Matrix.Translation;
+                dummyLocations.Add(Vector3D.Transform(DummyLoc, block.WorldMatrix));
+            }
+
+            if (ModelDummy.ContainsKey("cable_attach_point_1"))
+            {
+                Vector3D DummyLoc = ModelDummy["cable_attach_point_1"].Matrix.Translation;
+                dummyLocations.Add(Vector3D.Transform(DummyLoc, block.WorldMatrix));
+            }
+            else
+            {
+                // Check for combined male dummies
+                if (ModelDummy.ContainsKey("CombinedFuelMale") && ModelDummy.ContainsKey("CombinedPowerMale"))
+                {
+                    Vector3D DummyLocFuel = ModelDummy["CombinedFuelMale"].Matrix.Translation;
+                    dummyLocations.Add(Vector3D.Transform(DummyLocFuel, block.WorldMatrix));
+
+                    Vector3D DummyLocPower = ModelDummy["CombinedPowerMale"].Matrix.Translation;
+                    dummyLocations.Add(Vector3D.Transform(DummyLocPower, block.WorldMatrix));
+                }
+                // Check for combined female dummies
+                else if (ModelDummy.ContainsKey("CombinedFuelFemale") && ModelDummy.ContainsKey("CombinedPowerFemale"))
+                {
+                    Vector3D DummyLocFuel = ModelDummy["CombinedFuelFemale"].Matrix.Translation;
+                    dummyLocations.Add(Vector3D.Transform(DummyLocFuel, block.WorldMatrix));
+
+                    Vector3D DummyLocPower = ModelDummy["CombinedPowerFemale"].Matrix.Translation;
+                    dummyLocations.Add(Vector3D.Transform(DummyLocPower, block.WorldMatrix));
+                }
+            }
+
+            return dummyLocations;
+        }
+
+        // =====================================================================================================================================================================================================================
 
         public static Vector3D LocalToWorldPosition(Vector3D localPosition, MatrixD worldPosition)
         {
@@ -136,14 +174,12 @@ namespace FaolonTether
             return true;
         }
 
-        public static bool IsPlayerInMenus() {
+        public static bool IsPlayerInMenus()
+        {
             return MyAPIGateway.Gui.IsCursorVisible || MyAPIGateway.Gui.ChatEntryVisible;
         }
 
-
         // =====================================================================================================================================================================================================================
-
-
 
         public class RaycastData
         {
