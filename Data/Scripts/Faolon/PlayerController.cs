@@ -90,7 +90,8 @@ namespace FaolonTether
                 MyLog.Default.Info($"[Tether] Right Click - State: {State}");
                 Cancel();
             }
-            MatrixD playerMatrix = MyAPIGateway.Session.Player.Character.GetHeadMatrix(true);
+
+             MatrixD playerMatrix = MyAPIGateway.Session.Player.Character.GetHeadMatrix(true);
             Tools.RaycastData hit = Tools.RayCastGetHitBlock(playerMatrix);
 
             // stop if there is nothing to interact with

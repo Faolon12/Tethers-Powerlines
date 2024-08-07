@@ -276,7 +276,7 @@
         <Model BuildPercentUpperBound="0.66" File="Models\Psycho\Large\FemaleChargerFuel\LFemaleCStation_BS2.mwm" />
         <Model BuildPercentUpperBound="1.00" File="Models\Psycho\Large\FemaleChargerFuel\LFemaleCStation_BS3.mwm" />
       </BuildProgressModels>
-      <BlockPairName>LFemaleCStation</BlockPairName>
+      <BlockPairName>FemaleCStation</BlockPairName>
       <MirroringZ>Y</MirroringZ>
       <MirroringY>Z</MirroringY>
       <EdgeType>Light</EdgeType>
@@ -329,7 +329,7 @@
         <Model BuildPercentUpperBound="0.66" File="Models\Psycho\Small\SMaleCStation\SMaleCStation_BS2.mwm" />
         <Model BuildPercentUpperBound="1.00" File="Models\Psycho\Small\SMaleCStation\SMaleCStation_BS3.mwm" />
       </BuildProgressModels>
-      <BlockPairName>SMaleCStation</BlockPairName>
+      <BlockPairName>MaleCStation</BlockPairName>
       <MirroringZ>Y</MirroringZ>
       <MirroringY>Z</MirroringY>
       <EdgeType>Light</EdgeType>
