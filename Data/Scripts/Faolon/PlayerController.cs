@@ -146,7 +146,7 @@ namespace FaolonTether
 
             PowerlinePole target = null;
             Vector4 color = VRageMath.Color.DarkGray;
-            Vector3 endpoint;
+            Vector3D endpoint;
 
             MatrixD playerMatrix = MyAPIGateway.Session.Player.Character.GetHeadMatrix(true);
             Tools.RaycastData hit = Tools.RayCastGetHitBlock(playerMatrix);
@@ -166,11 +166,23 @@ namespace FaolonTether
                 endpoint = playerMatrix.Translation + (playerMatrix.Forward * Settings.Instance.InteractionDistance);
             }
 
-            float line_thickness = 0.05f;
+            float lineThickness = 0.05f;
 
-            // Draw the cable line.
-            MySimpleObjectDraw.DrawLine(InteractionObject.DummyAttachPoint, endpoint, cable_vis, ref color, line_thickness, BlendTypeEnum.Standard);
+            // Log the positions for debugging
+            MyLog.Default.Info($"[Tether] InteractionObject Position: {InteractionObject.DummyAttachPoint}");
+            MyLog.Default.Info($"[Tether] Endpoint Position: {endpoint}");
+            MyLog.Default.Info($"[Tether] Player Position: {playerMatrix.Translation}");
 
+            // Transform positions to player-relative coordinates
+            Vector3D relativeInteractionObjectPosition = InteractionObject.DummyAttachPoint - playerMatrix.Translation;
+            Vector3D relativeEndpoint = endpoint - playerMatrix.Translation;
+
+            // Log the relative positions for debugging
+            MyLog.Default.Info($"[Tether] Relative InteractionObject Position: {relativeInteractionObjectPosition}");
+            MyLog.Default.Info($"[Tether] Relative Endpoint Position: {relativeEndpoint}");
+
+            // Draw the cable line using world coordinates directly to avoid issues
+            MySimpleObjectDraw.DrawLine(InteractionObject.DummyAttachPoint, endpoint, cable_vis, ref color, lineThickness, BlendTypeEnum.Standard);
         }
 
         private void Select(PowerlinePole pole)
