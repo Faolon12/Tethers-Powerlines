@@ -26,22 +26,37 @@ namespace FaolonTether
         }
 
         [ProtoMember(1)]
-        public float InteractionDistance;
+        public float InteractionDistance { get; set; }
 
         [ProtoMember(2)]
-        public float MaxCableDistanceStaticToStatic;
+        public float MaxCableDistanceStaticToStatic { get; set; }
 
         [ProtoMember(3)]
-        public float MaxCableDistanceLargeToLarge;
+        public float MaxCableDistanceLargeToLarge { get; set; }
 
         [ProtoMember(4)]
-        public float MaxCableDistanceSmallToSmall;
+        public float MaxCableDistanceSmallToSmall { get; set; }
 
         [ProtoMember(5)]
-        public float MaxCableDistanceSmallToLarge;
+        public float MaxCableDistanceSmallToLarge { get; set; }
 
         [ProtoMember(6)]
-        public float PlayerDrawDistance;
+        public float PlayerDrawDistance { get; set; }
+
+        [ProtoMember(7)]
+        public int MaxConnectionsChargingStation { get; set; }
+
+        [ProtoMember(8)]
+        public int MaxConnectionsTransformerPylon { get; set; }
+
+        [ProtoMember(9)]
+        public int MaxConnectionsPowerlinePillar { get; set; }
+
+        [ProtoMember(10)]
+        public int MaxConnectionsPowerSockets { get; set; }
+
+        [ProtoMember(11)]
+        public int MaxConnectionsConveyorHoseAttachment { get; set; }
 
         public static Settings GetDefaults()
         {
@@ -53,7 +68,11 @@ namespace FaolonTether
                 MaxCableDistanceSmallToSmall = 50f,
                 MaxCableDistanceSmallToLarge = 25f,
                 PlayerDrawDistance = 3000f,
-
+                MaxConnectionsChargingStation = 1,
+                MaxConnectionsTransformerPylon = 3,
+                MaxConnectionsPowerlinePillar = 3,
+                MaxConnectionsPowerSockets = 2,
+                MaxConnectionsConveyorHoseAttachment = 1
             };
         }
 
@@ -71,6 +90,26 @@ namespace FaolonTether
                     reader.Close();
 
                     settings = MyAPIGateway.Utilities.SerializeFromXML<Settings>(text);
+
+                    // Manually update missing parameters
+                    bool updated = false;
+                    if (settings.InteractionDistance == 0) { settings.InteractionDistance = defaults.InteractionDistance; updated = true; }
+                    if (settings.MaxCableDistanceStaticToStatic == 0) { settings.MaxCableDistanceStaticToStatic = defaults.MaxCableDistanceStaticToStatic; updated = true; }
+                    if (settings.MaxCableDistanceLargeToLarge == 0) { settings.MaxCableDistanceLargeToLarge = defaults.MaxCableDistanceLargeToLarge; updated = true; }
+                    if (settings.MaxCableDistanceSmallToSmall == 0) { settings.MaxCableDistanceSmallToSmall = defaults.MaxCableDistanceSmallToSmall; updated = true; }
+                    if (settings.MaxCableDistanceSmallToLarge == 0) { settings.MaxCableDistanceSmallToLarge = defaults.MaxCableDistanceSmallToLarge; updated = true; }
+                    if (settings.PlayerDrawDistance == 0) { settings.PlayerDrawDistance = defaults.PlayerDrawDistance; updated = true; }
+                    if (settings.MaxConnectionsChargingStation == 0) { settings.MaxConnectionsChargingStation = defaults.MaxConnectionsChargingStation; updated = true; }
+                    if (settings.MaxConnectionsTransformerPylon == 0) { settings.MaxConnectionsTransformerPylon = defaults.MaxConnectionsTransformerPylon; updated = true; }
+                    if (settings.MaxConnectionsPowerlinePillar == 0) { settings.MaxConnectionsPowerlinePillar = defaults.MaxConnectionsPowerlinePillar; updated = true; }
+                    if (settings.MaxConnectionsPowerSockets == 0) { settings.MaxConnectionsPowerSockets = defaults.MaxConnectionsPowerSockets; updated = true; }
+                    if (settings.MaxConnectionsConveyorHoseAttachment == 0) { settings.MaxConnectionsConveyorHoseAttachment = defaults.MaxConnectionsConveyorHoseAttachment; updated = true; }
+
+                    if (updated)
+                    {
+                        Save(settings);
+                        MyLog.Default.Info($"[{ModName}] Settings updated with missing parameters");
+                    }
                 }
                 else
                 {
@@ -101,6 +140,5 @@ namespace FaolonTether
                 MyLog.Default.Info($"[{ModName}] Failed to save settings\n{e.ToString()}");
             }
         }
-
     }
 }

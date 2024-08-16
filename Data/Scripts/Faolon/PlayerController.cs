@@ -78,7 +78,7 @@ namespace FaolonTether
 
             if (tool != null)
             {
-                MyLog.Default.Info("[Tether] Player is holding a tool, skipping interaction.");
+                //MyLog.Default.Info("[Tether] Player is holding a tool, skipping interaction.");
                 return;
             }
 
@@ -169,17 +169,17 @@ namespace FaolonTether
             float lineThickness = 0.05f;
 
             // Log the positions for debugging
-            MyLog.Default.Info($"[Tether] InteractionObject Position: {InteractionObject.DummyAttachPoint}");
-            MyLog.Default.Info($"[Tether] Endpoint Position: {endpoint}");
-            MyLog.Default.Info($"[Tether] Player Position: {playerMatrix.Translation}");
+            //MyLog.Default.Info($"[Tether] InteractionObject Position: {InteractionObject.DummyAttachPoint}");
+            //MyLog.Default.Info($"[Tether] Endpoint Position: {endpoint}");
+            //MyLog.Default.Info($"[Tether] Player Position: {playerMatrix.Translation}");
 
             // Transform positions to player-relative coordinates
             Vector3D relativeInteractionObjectPosition = InteractionObject.DummyAttachPoint - playerMatrix.Translation;
             Vector3D relativeEndpoint = endpoint - playerMatrix.Translation;
 
             // Log the relative positions for debugging
-            MyLog.Default.Info($"[Tether] Relative InteractionObject Position: {relativeInteractionObjectPosition}");
-            MyLog.Default.Info($"[Tether] Relative Endpoint Position: {relativeEndpoint}");
+            //MyLog.Default.Info($"[Tether] Relative InteractionObject Position: {relativeInteractionObjectPosition}");
+            //MyLog.Default.Info($"[Tether] Relative Endpoint Position: {relativeEndpoint}");
 
             // Draw the cable line using world coordinates directly to avoid issues
             MySimpleObjectDraw.DrawLine(InteractionObject.DummyAttachPoint, endpoint, cable_vis, ref color, lineThickness, BlendTypeEnum.Standard);

@@ -57,7 +57,7 @@ arguments are camelCased
 
 namespace FaolonTether
 {
-    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_TerminalBlock), false, "ChargingStation", "TransformerPylon", "PowerlinePillar", "PowerSockets", "ConveyorHoseAttachment", "LFemaleCStation", "SMaleCStation")]
+    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_TerminalBlock), false, "ChargingStation", "TransformerPylon", "PowerlinePillar", "PowerSockets", "ConveyorHoseAttachment")]
     public class PowerlinePole : MyGameLogicComponent
     {
         public static readonly Guid SETTINGS_GUID = new Guid("73bb9141-0a4e-4c5a-93ae-f0d9ff23c043");
@@ -69,6 +69,7 @@ namespace FaolonTether
 
         public Vector3D DummyAttachPoint = new Vector3D(0, 0, 0); // This block's attach start point.
         private Dictionary<string, IMyModelDummy> ModelDummy = new Dictionary<string, IMyModelDummy>();
+        public static Dictionary<long, List<PowerlineLink>> gridLinks = new Dictionary<long, List<PowerlineLink>>();
 
         private static GridLinkTypeEnum LinkType = GridLinkTypeEnum.Logical;
 
@@ -90,6 +91,12 @@ namespace FaolonTether
             ModBlock = Entity as IMyTerminalBlock;
             Grid = (MyCubeGrid)ModBlock.CubeGrid;
 
+            if (ModBlock == null || Grid == null)
+            {
+                MyLog.Default.Error("[Tether] Initialization failed: ModBlock or Grid is null.");
+                return;
+            }
+
             requestAttach = new NetSync<PowerlineLink>(Entity, TransferType.Both, new PowerlineLink());
             requestDetach = new NetSync<PowerlineLink>(Entity, TransferType.Both, new PowerlineLink());
             requestAttach.ValueChanged += AttachLink;
@@ -98,6 +105,7 @@ namespace FaolonTether
             NeedsUpdate |= MyEntityUpdateEnum.BEFORE_NEXT_FRAME | MyEntityUpdateEnum.EACH_FRAME | MyEntityUpdateEnum.EACH_100TH_FRAME;
             MyLog.Default.Info($"[Tether] Init completed for block {ModBlock.EntityId}");
         }
+
 
         public override bool IsSerialized()
         {
@@ -130,51 +138,75 @@ namespace FaolonTether
 
         public void AttachLink(PowerlineLink o, PowerlineLink n)
         {
-            MyLog.Default.Info("[Tether] recieved request to attach");
+            MyLog.Default.Info("[Tether] received request to attach");
             lock (Links)
             {
+                MyLog.Default.Info("[Tether] Lock acquired, proceeding with attach process.");
+
                 n.LoadPrep();
 
-                PowerlineLink link = null;
+                MyLog.Default.Info($"[Tether] LoadPrep completed for {n.PoleA.Entity.EntityId} and {n.PoleB.Entity.EntityId}");
 
-                for (int i = 0; i < Links.Count; i++)
+                int maxConnectionsA = GetMaxConnections(n.PoleA);
+                int maxConnectionsB = GetMaxConnections(n.PoleB);
+
+                MyLog.Default.Info($"[Tether] Max connections: PoleA: {maxConnectionsA}, PoleB: {maxConnectionsB}");
+
+                int currentConnectionsA = GetConnectionsCount(n.PoleA);
+                int currentConnectionsB = GetConnectionsCount(n.PoleB);
+
+                MyLog.Default.Info($"[Tether] Current connections: PoleA: {currentConnectionsA}, PoleB: {currentConnectionsB}");
+
+                if (currentConnectionsA >= maxConnectionsA)
                 {
-                    PowerlineLink l = Links[i];
-                    if (l.PoleAGridName == n.PoleAGridName && l.PoleAPosition == n.PoleAPosition &&
-                        l.PoleBGridName == n.PoleBGridName && l.PoleBPosition == n.PoleBPosition)
-                    {
-                        link = l;
-                        break;
-                    }
+                    MyLog.Default.Info($"[Tether] Maximum connections reached for {n.PoleA.ModBlock.BlockDefinition.SubtypeName}");
+                    MyAPIGateway.Utilities.ShowNotification($"Maximum connections reached for {n.PoleA.ModBlock.BlockDefinition.SubtypeName}", 5000);
+                    return;
                 }
 
-                if (link == null) 
+                if (currentConnectionsB >= maxConnectionsB)
                 {
+                    MyLog.Default.Info($"[Tether] Maximum connections reached for {n.PoleB.ModBlock.BlockDefinition.SubtypeName}");
+                    MyAPIGateway.Utilities.ShowNotification($"Maximum connections reached for {n.PoleB.ModBlock.BlockDefinition.SubtypeName}", 5000);
+                    return;
+                }
+
+                PowerlineLink link = Links.FirstOrDefault(l =>
+                    l.PoleAGridName == n.PoleAGridName && l.PoleAPosition == n.PoleAPosition &&
+                    l.PoleBGridName == n.PoleBGridName && l.PoleBPosition == n.PoleBPosition);
+
+                if (link == null)
+                {
+                    MyLog.Default.Info($"[Tether] No existing link found, creating new link.");
                     ConnectGrids(n.PoleA.Entity.EntityId, n.PoleA.Grid, n.PoleB.Grid);
                     Links.Add(n);
-                    MyLog.Default.Info($"[Tether] attached pole: {n.PoleA.Entity.EntityId} to {n.PoleB.Entity.EntityId}");
+                    MyLog.Default.Info($"[Tether] Attached pole: {n.PoleA.Entity.EntityId} to {n.PoleB.Entity.EntityId}");
                 }
+                else
+                {
+                    MyLog.Default.Info($"[Tether] Link already exists between poles.");
+                }
+
+                MyLog.Default.Info("[Tether] Attach process completed.");
             }
         }
 
         public void DetachLink(PowerlineLink o, PowerlineLink n)
         {
-            MyLog.Default.Info("[Tether] recieved request to detach");
+            MyLog.Default.Info("[Tether] received request to detach");
             lock (Links)
             {
                 n.LoadPrep();
 
-                for (int i = 0; i < Links.Count; i++) 
+                PowerlineLink linkToRemove = Links.FirstOrDefault(l =>
+                    l.PoleAGridName == n.PoleAGridName && l.PoleAPosition == n.PoleAPosition &&
+                    l.PoleBGridName == n.PoleBGridName && l.PoleBPosition == n.PoleBPosition);
+
+                if (linkToRemove != null)
                 {
-                    PowerlineLink l = Links[i];
-                    if (l.PoleAGridName == n.PoleAGridName && l.PoleAPosition == n.PoleAPosition &&
-                        l.PoleBGridName == n.PoleBGridName && l.PoleBPosition == n.PoleBPosition) 
-                    {
-                        DisconnectGrids(n.PoleA.Entity.EntityId, n.PoleA.Grid, n.PoleB.Grid);
-                        Links.Remove(l);
-                        MyLog.Default.Info($"[Tether] removed pole: {n.PoleA.Entity.EntityId} to {n.PoleB.Entity.EntityId}");
-                        break;
-                    }
+                    DisconnectGrids(n.PoleA.Entity.EntityId, n.PoleA.Grid, n.PoleB.Grid);
+                    Links.Remove(linkToRemove);
+                    MyLog.Default.Info($"[Tether] removed pole: {n.PoleA.Entity.EntityId} to {n.PoleB.Entity.EntityId}");
                 }
             }
         }
@@ -208,6 +240,7 @@ namespace FaolonTether
                     foreach (PowerlineLink l in links.Links)
                     {
                         l.LoadPrep();
+                        ConnectGrids(l.PoleA.Entity.EntityId, l.PoleA.Grid, l.PoleB.Grid);
                     }
 
                     lock (Links)
@@ -228,7 +261,7 @@ namespace FaolonTether
 
             lock (Links)
             {
-                for (int i = 0; i < Links.Count; i++)
+                for (int i = Links.Count - 1; i >= 0; i--) // Loop in reverse to safely remove items
                 {
                     PowerlineLink l = Links[i];
 
@@ -247,16 +280,13 @@ namespace FaolonTether
         /// </summary>
         public override void UpdateAfterSimulation()
         {
-            if (ModBlock.CubeGrid?.Physics == null)
+            if (ModBlock == null || ModBlock.CubeGrid?.Physics == null)
                 return;
 
             if (MyAPIGateway.Session?.Player?.Character == null)
                 return;
 
-            if (!Grid.IsStatic)
-            {
-                DummyAttachPoint = Tools.GetDummyRelativeLocation(ModBlock);
-            }
+            DummyAttachPoint = Tools.GetDummyRelativeLocation(ModBlock);
 
             DrawCable();
         }
@@ -301,21 +331,17 @@ namespace FaolonTether
 
         public static int LinkCount(MyCubeGrid a, MyCubeGrid b)
         {
-            int linkCount = 0;
-            foreach (PowerlineLink l in Links)
+            lock (Links)
             {
-                if ((l.PoleA.Grid == a || l.PoleB.Grid == a) &&
-                    (l.PoleA.Grid == b || l.PoleB.Grid == b))
-                {
-                    linkCount++;
-                }
+                return Links.Count(l => (l.PoleA.Grid == a || l.PoleB.Grid == a) &&
+                                         (l.PoleA.Grid == b || l.PoleB.Grid == b));
             }
-
-            return linkCount;
         }
+
 
         public static void ConnectGrids(long id, MyCubeGrid a, MyCubeGrid b)
         {
+            MyLog.Default.Info($"[Tether] ConnectGrids HAS BEEN CALLED");
             int linkCount = LinkCount(a, b);
             if (linkCount > 0)
             {
@@ -325,10 +351,15 @@ namespace FaolonTether
 
             if (!a.IsInSameLogicalGroupAs(b))
             {
-                MyCubeGrid.CreateGridGroupLink(LinkType, id, a, b);
-                MyCubeGrid.CreateGridGroupLink(GridLinkTypeEnum.Electrical, id, a, b);
+                MyCubeGrid.CreateGridGroupLink(LinkType, a.EntityId, a, b);
+                MyCubeGrid.CreateGridGroupLink(GridLinkTypeEnum.Electrical, a.EntityId, a, b);
+
+                MyCubeGrid.CreateGridGroupLink(LinkType, b.EntityId, a, b);
+                MyCubeGrid.CreateGridGroupLink(GridLinkTypeEnum.Electrical, b.EntityId, a, b);
                 MyLog.Default.Info($"[Tether] ConnectGrids: grids {a.EntityId} and {b.EntityId} are now connected");
             }
+            else
+                MyLog.Default.Info($"[Tether] Grid connection between  {a.EntityId} and {b.EntityId} Exist already");
         }
 
         public static void DisconnectGrids(long id, MyCubeGrid a, MyCubeGrid b)
@@ -339,8 +370,12 @@ namespace FaolonTether
                 int linkCount = LinkCount(a, b);
                 if (linkCount == 1)
                 {
-                    MyCubeGrid.BreakGridGroupLink(LinkType, id, a, b);
-                    MyCubeGrid.BreakGridGroupLink(GridLinkTypeEnum.Electrical, id, a, b);
+                    MyCubeGrid.BreakGridGroupLink(LinkType, a.EntityId, a, b);
+                    MyCubeGrid.BreakGridGroupLink(GridLinkTypeEnum.Electrical, a.EntityId, a, b);
+
+                    MyCubeGrid.BreakGridGroupLink(LinkType, b.EntityId, a, b);
+                    MyCubeGrid.BreakGridGroupLink(GridLinkTypeEnum.Electrical, b.EntityId, a, b);
+
                     MyLog.Default.Info($"[Tether] DisconnectGrids: grids {a.EntityId} and {b.EntityId} are disconnected");
                 }
                 else
@@ -354,8 +389,6 @@ namespace FaolonTether
             }
 
         }
-
-
 
         public void ConnectionPoles(PowerlinePole targetPole, IMyPlayer player)
         {
@@ -461,6 +494,44 @@ namespace FaolonTether
             return false;
         }
 
+        private int GetMaxConnections(PowerlinePole pole)
+        {
+            int maxConnections;
+            switch (pole.ModBlock.BlockDefinition.SubtypeName)
+            {
+                case "ChargingStation":
+                    maxConnections = Settings.Instance.MaxConnectionsChargingStation;
+                    break;
+                case "TransformerPylon":
+                    maxConnections = Settings.Instance.MaxConnectionsTransformerPylon;
+                    break;
+                case "PowerlinePillar":
+                    maxConnections = Settings.Instance.MaxConnectionsPowerlinePillar;
+                    break;
+                case "PowerSockets":
+                    maxConnections = Settings.Instance.MaxConnectionsPowerSockets;
+                    break;
+                case "ConveyorHoseAttachment":
+                    maxConnections = Settings.Instance.MaxConnectionsConveyorHoseAttachment;
+                    break;
+                default:
+                    MyLog.Default.Error($"[Tether] Unknown subtype name: {pole.ModBlock.BlockDefinition.SubtypeName}");
+                    maxConnections = 2; // Default value if not specified
+                    break;
+            }
+            MyLog.Default.Info($"[Tether] Max connections for {pole.ModBlock.BlockDefinition.SubtypeName}: {maxConnections}");
+            return maxConnections;
+        }
+
+        private int GetConnectionsCount(PowerlinePole pole)
+        {
+            lock (Links)
+            {
+                int count = Links.Count(l => l.PoleA == pole || l.PoleB == pole);
+                MyLog.Default.Info($"[Tether] {pole.ModBlock.BlockDefinition.SubtypeName} at {pole.Entity.EntityId} has {count} connections.");
+                return count;
+            }
+        }
 
         private void DrawCable()
         {
